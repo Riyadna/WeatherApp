@@ -1,82 +1,92 @@
-import { useState } from 'react'
-import './App.css'
-import propTypes from "prop-types";
+import { useEffect, useState } from "react";
+import "./App.css";
+import PropType from "prop-types";
 
-/*images*/
-import searchIcon from './assets/search.png';
-import clearIcon from './assets/clear.png';
-import cloudIcon from './assets/cloud.png';
-import DrizzleIcon from './assets/drizzle.png';
-import humidityIcon from './assets/humidity.png';
-import rainIcon from './assets/rain.png';
-import snowIcon from './assets/snow.png';
-import windIcon from './assets/wind.png';
-import { useEffect } from 'react';
+// images
+import clearIcon from "./assets/clear.png";
+import cloudIcon from "./assets/cloud.png";
+import drizzleIcon from "./assets/drizzle.png";
+import humidityIcon from "./assets/humidity.png";
+import rainIcon from "./assets/rain.png";
+import searchIcon from "./assets/search.png";
+import snowIcon from "./assets/snow.png";
+import windIcon from "./assets/wind.png";
 
-const WeatherDetails = ({icon,temp,city,country,lat,log,humidity,wind}) => {
+const WeatherDetails = ({
+  icon,
+  temp,
+  city,
+  country,
+  lat,
+  log,
+  humidity,
+  wind,
+}) => {
   return (
-    <><div className='image'>
-      <img src={icon} alt="Images" />
-    </div>
-    <div className="temp">{temp}°C</div>
-    <div className="location">{city}</div>
-    <div className="country">{country}</div>
-    <div className="cord">
-      <div>
-        <span className="lat">latitude</span>
-        <span>{lat}</span>
+    <>
+      <div className="image">
+        <img src={icon} alt="image" />
       </div>
-      <div>
-        <span className="log">logitude</span>
-        <span>{log}</span>
+      <div className="temp">{temp}°C</div>
+      <div className="city">{city}</div>
+      <div className="country">{country}</div>
+      <div className="cord">
+        <div>
+          <span className="lat">latitude</span>
+          <span>{lat}</span>
+        </div>
+        <div>
+          <span className="log">longtitude</span>
+          <span>{log}</span>
+        </div>
       </div>
-    </div>
-    <div className="data-container">
-      <div className="element">
-      <img src={humidityIcon} alt="humidity" className="icon"/>
-      <div className="data">
-        <div className="humidity-percentage">{humidity}%</div>
-        <div className="text">Humidity</div>
+      <div className="data-container">
+        <div className="element">
+          <img src={humidityIcon} alt="humidity" className="icon" />
+          <div className="data">
+            <div className="humidity-percentage">{humidity}%</div>
+            <div className="text">Himudity</div>
+          </div>
+        </div>
+        <div className="element">
+          <img src={windIcon} alt="wind" className="icon" />
+          <div className="data">
+            <div className="wind-percentage">{wind}km/h</div>
+            <div className="text">Wind Speed</div>
+          </div>
+        </div>
       </div>
+      <div className="last">
+        Design by <span> Yatheentharan Riyadna</span>
       </div>
-      <div className="element">
-      <img src={windIcon} alt="wind" className='icon'/>
-      <div className="data">
-        <div className="wind-percentage">{wind}km/h</div>
-        <div className="text">Wind Speed</div>
-      </div>
-      </div>
-    </div>
     </>
-  )
-}
-
-WeatherDetails.prototype = {
-  icon: propTypes.string.isRequired,
-  temp: propTypes.number.isRequired,
-  city: propTypes.string.isRequired,
-  country: propTypes.string.isRequired,
-  humidity: propTypes.number.isRequired,
-  wind: propTypes.number.isRequired,
-  lat: propTypes.number.isRequired,
-  log: propTypes.number.isRequired,
+  );
 };
 
-function App() {  
-  let api_key = "1d01021550a1f095d99a96d94d7669e4";
-  const [text, setText] = useState("Colombo");
+WeatherDetails.PropType = {
+  icon: PropType.string.isRequired,
+  temp: PropType.number.isRequired,
+  city: PropType.string.isRequired,
+  country: PropType.string.isRequired,
+  lat: PropType.number.isRequired,
+  log: PropType.number.isRequired,
+  humidity: PropType.number.isRequired,
+  wind: PropType.number.isRequired,
+};
 
-  const [icon, setIcon] = useState(snowIcon);
-  const [temp, setTemp] = useState(0);
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
-  const [lat, setLat] = useState(0);
-  const [log, setLog] = useState(0);
-  const [humidity, setHumidity] = useState(0);
-  const [wind, setWind] = useState(0);
-
-  const [cityNotFound, setCityNotFound] = useState(false);
+function App() {
+  const api_key = "e07fe52d4766cb3e3789181468d36b7b";
+  const [icon, setIcon] = useState(clearIcon);
+  const [temp, setTemp] = useState();
+  const [city, setCity] = useState();
+  const [country, setCountry] = useState();
+  const [lat, setLat] = useState();
+  const [log, setLog] = useState();
+  const [humidity, setHumidity] = useState();
+  const [wind, setWind] = useState();
+  const [text, setText] = useState("london");
   const [loading, setLoading] = useState(false);
+  const [cityNotFound, setCityNotFound] = useState(false);
   const [error, setError] = useState(null);
 
   const weatherIconMap = {
@@ -84,95 +94,98 @@ function App() {
     "01n": clearIcon,
     "02d": cloudIcon,
     "02n": cloudIcon,
-    "03d": DrizzleIcon,
-    "03n": DrizzleIcon,
-    "04d": DrizzleIcon,
-    "04n": DrizzleIcon,
+    "03d": drizzleIcon,
+    "03n": drizzleIcon,
+    "04d": drizzleIcon,
+    "04n": drizzleIcon,
     "09d": rainIcon,
     "09n": rainIcon,
     "10d": rainIcon,
     "10n": rainIcon,
     "13d": snowIcon,
     "13n": snowIcon,
-  }
-  
-const search = async () => {
-  setLoading(true);
+  };
 
-  let url = `https://api.openweathermap.org/data/2.5/weather?q=
-  ${text}&appid=${api_key}&units=Metric`;
+  const search = async () => {
+    setLoading(true);
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${text}&appid=${api_key}&units=metric`;
 
-  try{   
-    let res = await fetch(url);
-    let data = await res.json();
-    //console.log(data);
-    if(data.cod === "404") {
-      console.error("City not found");
-      setCityNotFound(true);
+    try {
+      let res = await fetch(url);
+      let data = await res.json();
+      // console.log(data);
+      if (data.cod === "404") {
+        console.error("City not found");
+        setCityNotFound(true);
+        setLoading(false);
+        return;
+      }
+      setTemp(Math.floor(data.main.temp));
+      setHumidity(data.main.humidity);
+      setWind(data.wind.speed);
+      setCountry(data.sys.country);
+      setCity(data.name);
+      setLat(data.coord.lat);
+      setLog(data.coord.lon);
+      const weatherIconCode = data.weather[0].icon;
+      setIcon(weatherIconMap[weatherIconCode] || clearIcon);
+      setCityNotFound(false);
+    } catch (error) {
+      console.error("An error occurred:", error.message);
+      setError("An error occurred while fetching weather data.");
+    } finally {
       setLoading(false);
-      return;
     }
+  };
 
-    setHumidity(data.main.humidity);
-    setWind(data.wind.speed);
-    setTemp(Math.floor(data.main.temp));
-    setCity(data.name);
-    setCountry(data.sys.country);
-    setLat(data.coord.lat);
-    setLog(data.coord.lon);
+  const handleCity = (e) => {
+    setText(e.target.value);
+  };
 
-    const weatherIconCode = data.weather[0].icon;
-    setIcon(weatherIconMap[weatherIconCode] || clearIcon);
-    setCityNotFound(false);
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      search();
+    }
+  };
 
-  }catch(error) {
-    console.error("An error occurred:",error.message);  
-    setError("An error occurred while fetching weather data.");
-  }finally{
-    setLoading(false);
-  }
-};
-
-const handleCity = (e) => {
-  setText(e.target.value);
-};
-const handleKeyDown = (e) => {
-  if(e.key === "Enter"){
+  useEffect(function () {
     search();
-  }
-}
+  }, []);
 
-useEffect(function() {
-  search();
-}, []);
-
-  return ( 
+  return (
     <>
-      <div className='container'>
-        <div className='input-container'>
-          <input type="text" className='cityInput'
-           placeholder='Search City' onChange={handleCity} 
-           value={text} onKeyDown={handleKeyDown}/>
-          <div className='search-icon' onClick={() => search()}>
-            <img src={searchIcon} alt="Search"/>
+      <div className="container">
+        <div className="box-container">
+          <input
+            type="text"
+            className="cityInput"
+            placeholder="Search City"
+            onChange={handleCity}
+            value={text}
+            onKeyDown={handleKeyDown}
+          />
+          <div className="search-icon" onClick={() => search()}>
+            <img src={searchIcon} alt="searchIcon" />
           </div>
-          </div>
-         
-{loading &&<div className='loading-message'>Loading...</div>}
-{error &&<div className='error-meassage'>{error}</div>}
-{cityNotFound &&<div className='city-not-found'>City Not Found</div>}
-
-{!loading && !cityNotFound && <WeatherDetails icon={icon} temp={temp} city={city} country={country} 
-          lat={lat} log={log} humidity={humidity} wind={wind}/>}
-
-
-          <p className="copyright">
-            Desined by <span>Yatheentharan Riyadna</span>
-          </p>
-          
-      </div>     
+        </div>
+        {loading && <div className="loading-message">Loading...</div>}{" "}
+        {error && <div className="error-message">{error}</div>}{" "}
+        {cityNotFound && <div className="city-not-found">City not found</div>}{" "}
+        {!loading && !cityNotFound && (
+          <WeatherDetails
+            icon={icon}
+            temp={temp}
+            city={city}
+            country={country}
+            lat={lat}
+            log={log}
+            humidity={humidity}
+            wind={wind}
+          />
+        )}
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
