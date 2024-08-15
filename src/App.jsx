@@ -75,7 +75,7 @@ WeatherDetails.PropType = {
 };
 
 function App() {
-  const api_key = "e07fe52d4766cb3e3789181468d36b7b";
+  const api_key = import.meta.env.VITE_APP_API_KEY;
   const [icon, setIcon] = useState(clearIcon);
   const [temp, setTemp] = useState();
   const [city, setCity] = useState();
